@@ -1,17 +1,38 @@
+
+try:
+    import ssl
+except ImportError:  # pragma: no cover
+    ssl = None
+
 try:
     import aiohttp
     from aiohttp.connector import sentinel
-    from aiohttp.client_exceptions import certificate_errors, ssl_errors
+    from aiohttp.client_exceptions import (
+        ClientSSLError, ClientConnectorError)
 except ImportError:
     raise ImportError('aiosocks.SocksConnector require aiohttp library')
+
+from distutils.version import StrictVersion
+
 from .errors import SocksConnectionError
 from .helpers import Socks4Auth, Socks5Auth, Socks4Addr, Socks5Addr
 from . import create_connection
 
 __all__ = ('ProxyConnector', 'ProxyClientRequest')
 
+if ssl is not None:
+    certificate_errors = (ssl.CertificateError,)
+    certificate_errors_bases = (ClientSSLError, ssl.CertificateError,)
 
-from distutils.version import StrictVersion
+    ssl_errors = (ssl.SSLError,)
+    ssl_error_bases = (ClientConnectorError, ssl.SSLError)
+else:  # pragma: no cover
+    certificate_errors = tuple()
+    certificate_errors_bases = (ClientSSLError, ValueError,)
+
+    ssl_errors = tuple()
+    ssl_error_bases = (ClientConnectorError,)
+
 
 if StrictVersion(aiohttp.__version__) < StrictVersion('2.3.2'):
     raise RuntimeError('aiosocks.connector depends on aiohttp 2.3.2+')
