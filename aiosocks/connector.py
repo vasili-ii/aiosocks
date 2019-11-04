@@ -63,13 +63,13 @@ class ProxyClientRequest(aiohttp.ClientRequest):
 
 class ProxyConnector(aiohttp.TCPConnector):
     def __init__(self, *, verify_ssl=True, fingerprint=None,
-                 resolve=sentinel, use_dns_cache=True,
+                 use_dns_cache=True,
                  family=0, ssl_context=None, local_addr=None,
                  resolver=None, keepalive_timeout=sentinel,
                  force_close=False, limit=100, limit_per_host=0,
                  enable_cleanup_closed=False, loop=None, remote_resolve=True):
         super().__init__(
-            verify_ssl=verify_ssl, fingerprint=fingerprint, resolve=resolve,
+            verify_ssl=verify_ssl, fingerprint=fingerprint,
             family=family, ssl_context=ssl_context, local_addr=local_addr,
             resolver=resolver, keepalive_timeout=keepalive_timeout,
             force_close=force_close, limit=limit,  loop=loop,
