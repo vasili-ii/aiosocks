@@ -78,7 +78,7 @@ class ProxyConnector(aiohttp.TCPConnector):
 
         self._remote_resolve = remote_resolve
 
-    async def _create_proxy_connection(self, req):
+    async def _create_proxy_connection(self, req, *args, **kwargs):
         if req.proxy.scheme == 'http':
             return await super()._create_proxy_connection(req)
         else:
