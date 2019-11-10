@@ -13,6 +13,7 @@ except ImportError:
     raise ImportError('aiosocks.SocksConnector require aiohttp library')
 
 from distutils.version import StrictVersion
+from hashlib import sha256
 
 from .errors import SocksConnectionError
 from .helpers import Socks4Auth, Socks5Auth, Socks4Addr, Socks5Addr
@@ -99,7 +100,8 @@ class ProxyConnector(aiohttp.TCPConnector):
 
     async def _create_socks_connection(self, req):
         sslcontext = self._get_ssl_context(req)
-        fingerprint, hashfunc = self._get_fingerprint_and_hashfunc(req)
+        fingerprint = self._get_fingerprint(req)
+        hashfunc = sha256
 
         if not self._remote_resolve:
             try:
